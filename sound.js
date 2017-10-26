@@ -1,6 +1,6 @@
-'use strict';
+"use strict";
 
-var RNSound = require('react-native').NativeModules.RNSound;
+var RNSound = require("react-native").NativeModules.RNSound;
 var IsAndroid = RNSound.IsAndroid;
 var resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource");
 var nextKey = 0;
@@ -15,10 +15,10 @@ function Sound(filename, basePath, onError) {
     this._filename = asset.uri;
     onError = basePath;
   } else {
-    this._filename = basePath ? basePath + '/' + filename : filename;
+    this._filename = basePath ? basePath + "/" + filename : filename;
 
     if (IsAndroid && !basePath && isRelativePath(filename)) {
-      this._filename = filename.toLowerCase().replace(/\.[^.]+$/, '');
+      this._filename = filename.toLowerCase().replace(/\.[^.]+$/, "");
     }
   }
 
@@ -32,10 +32,10 @@ function Sound(filename, basePath, onError) {
   this._speed = 1;
   RNSound.prepare(this._filename, this._key, (error, props) => {
     if (props) {
-      if (typeof props.duration === 'number') {
+      if (typeof props.duration === "number") {
         this._duration = props.duration;
       }
-      if (typeof props.numberOfChannels === 'number') {
+      if (typeof props.numberOfChannels === "number") {
         this._numberOfChannels = props.numberOfChannels;
       }
     }
@@ -52,7 +52,7 @@ Sound.prototype.isLoaded = function() {
 
 Sound.prototype.play = function(onEnd) {
   if (this._loaded) {
-    RNSound.play(this._key, (successfully) => onEnd && onEnd(successfully));
+    RNSound.play(this._key, successfully => onEnd && onEnd(successfully));
   }
   return this;
 };
@@ -67,6 +67,13 @@ Sound.prototype.pause = function() {
 Sound.prototype.stop = function() {
   if (this._loaded) {
     RNSound.stop(this._key);
+  }
+  return this;
+};
+
+Sound.prototype.reset = function() {
+  if (this._loaded && IsAndroid) {
+    RNSound.reset(this._key);
   }
   return this;
 };
@@ -108,7 +115,7 @@ Sound.prototype.getPan = function() {
 
 Sound.prototype.setPan = function(value) {
   if (this._loaded) {
-    RNSound.setPan(this._key, this._pan = value);
+    RNSound.setPan(this._key, (this._pan = value));
   }
   return this;
 };
@@ -158,7 +165,7 @@ Sound.prototype.setCurrentTime = function(value) {
 
 Sound.prototype.setCategory = function(value) {
   Sound.setCategory(value, false);
-}
+};
 
 Sound.enable = function(enabled) {
   RNSound.enable(enabled);
